@@ -1,0 +1,96 @@
+<aura:component controller="LookupCtrl">
+  <aura:attribute access="public" name="value" type="Object" />
+  <aura:attribute access="public" name="field" type="Object" required="true" />
+
+  <aura:attribute access="public" name="disabled" type="boolean" default="false" />
+  <aura:attribute access="public" name="class" type="string" />
+
+  <aura:attribute access="public" name="cmpData" type="Object" />
+  <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+  <aura:handler name="change" value="{!v.value}" action="{!c.valueChange}"/>
+
+  <aura:registerEvent name="lookupEvent" type="c:LookupEvent"/>
+
+  <div>
+    <div class="{!'slds-form-element ' + v.class}">
+      <label class="slds-form-element__label" for="combobox-id-1">
+          <ui:outputText value="{!v.field.label}"/>
+      </label>
+      <div class="slds-form-element__control" title="{!v.value.label}">
+        <div class="{! 'slds-combobox_container ' + (v.value ? 'slds-has-selection' : '') }">
+          <div class="{!'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ' + (v.cmpData.isOpen ? 'slds-is-open' : '')}" 
+            aria-expanded="false" aria-haspopup="listbox" role="combobox">
+            <div role="none"
+              class="{!'slds-combobox__form-element slds-input-has-icon ' + (v.value ? 'slds-input-has-icon_left-right' : 'slds-input-has-icon_right')}">
+              <aura:if isTrue="{!v.value}">
+                <span class="slds-icon_container slds-icon-standard-account slds-combobox__input-entity-icon"> 
+                  <lightning:icon size="small" alternativeText="Record Icon" 
+                    iconName="{!'standard:' + v.cmpData.objectIcon}" />
+                </span>
+              </aura:if>
+              
+              <input type="text" id="combobox-id-1" value="{!v.value.label}" aura:id="lookup-control"              
+                class="{!'slds-input slds-combobox__input ' + (v.value ? 'slds-combobox__input-value' : '')}" 
+                aria-autocomplete="list" aria-controls="listbox-id-1" autocomplete="off" role="textbox" 
+                placeholder="Search..." disabled="{!v.disabled}" aria-activedescendant="option-0"
+                onfocus="{!c.focusIn}" onblur="{!c.focusOut}" readonly="{!v.value}"
+                oninput="{!c.searchValueChange}" onkeydown="{!c.keyPress}"/>
+
+              <aura:if isTrue="{! !v.value}">
+                <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                  <lightning:icon iconName="utility:search" size="x-small" alternativeText="Search icon"/>
+                </span>
+                <aura:set attribute="else">
+                  <lightning:buttonIcon iconName="utility:close" variant="bare" onclick="{!c.removeValue}" alternativeText="Remove selected option" 
+                    class="slds-button_icon slds-input__icon slds-input__icon_right"/>
+                </aura:set>
+              </aura:if>
+
+            </div>
+            <div aura:id="listbox-id-1" role="listbox"
+              class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" >
+              <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                <aura:if isTrue="{!v.cmpData.searchText}">
+                <li role="presentation" class="slds-listbox__item">
+                  <div aria-selected="true" id="option" role="option"
+                    class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_term slds-has-focus" >
+                    <span class="slds-media__figure">
+                      <lightning:icon iconName="utility:search" size="x-small" alternativeText="Search for term: "/>
+                    </span>
+                    <span class="slds-media__body">
+                      <span class="slds-listbox__option-text slds-listbox__option-text_entity">
+                        <ui:outputText value="{!v.cmpData.searchText}"/>
+                      </span>
+                    </span>
+                  </div>
+                </li>                  
+                </aura:if>
+                
+                <aura:iteration items="{!v.cmpData.dataSet}" var="item" indexVar="i">
+                <li role="presentation" class="slds-listbox__item" onmousedown="{!c.selectItem}" title="{!item.Name}">
+                  <div id="{!'option-'+i}" role="option" aura:id="lookup-item" onmouseenter="{!c.hoverItem}"
+                    class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta">
+                    <span class="slds-media__figure">
+                      <lightning:icon size="small" alternativeText="Record Icon" 
+                        iconName="{!'standard:' + v.cmpData.objectIcon}" />
+                    </span>
+                    <span class="slds-media__body">
+                      <span class="slds-listbox__option-text slds-listbox__option-text_entity">
+                        <ui:outputText value="{!item.Name}"/>
+                      </span>
+                      <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">
+                        <!-- <ui:outputText value="{!item.type}"/> • <ui:outputText value="{!item.desc}"/> -->
+                      </span>
+                    </span>
+                  </div>
+                </li>
+                </aura:iteration>
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aura:component>

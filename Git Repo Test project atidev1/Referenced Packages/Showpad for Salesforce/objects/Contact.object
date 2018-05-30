@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Showpad_Activity_Count__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The amount of Showpad Activities where this contact has been a part of.</description>
+        <externalId>false</externalId>
+        <label>Showpad Activity Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Showpad_Last_Activity_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date of the last Showpad Activity where this contact was a part of.</description>
+        <externalId>false</externalId>
+        <label>Showpad Last Activity Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Showpad_Last_View_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The last time that this contact has viewed content in Showpad activities.</description>
+        <externalId>false</externalId>
+        <label>Showpad Last View Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Showpad_Last_Viewed_Content__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>The last viewed content by this contact in Showpad activities.</description>
+        <externalId>false</externalId>
+        <label>Showpad Last Viewed Content</label>
+        <referenceTo>Showpad_Content__c</referenceTo>
+        <relationshipLabel>Contacts</relationshipLabel>
+        <relationshipName>Contacts</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Showpad_View_Count__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Number of times that this contact has viewed content in Showpad activities.</description>
+        <externalId>false</externalId>
+        <label>Showpad View Count</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

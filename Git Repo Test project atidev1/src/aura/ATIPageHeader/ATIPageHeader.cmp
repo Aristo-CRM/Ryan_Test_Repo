@@ -1,0 +1,76 @@
+<aura:component >
+    <aura:attribute name="iconObjName" type="string" default="quotes" />
+    <aura:attribute name="objectName" type="string" default="" />
+    <aura:attribute name="recordTitle" type="string" default="" />
+
+    <aura:attribute name="titleFields" type="object[]" default="" />    
+
+    <aura:attribute name="field1Title" type="string" default="" />
+    <aura:attribute name="field1Value" type="string" default="" />
+    
+    <aura:attribute name="field2Title" type="string" default="" />
+    <aura:attribute name="field2Value" type="string" default="" />
+    
+    <aura:attribute name="field3Title" type="string" default="" />
+    <aura:attribute name="field3Value" type="string" default="" />
+    
+    <div class="slds-page-header">
+      <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__figure">
+              <span class="slds-icon_container slds-icon-standard-opportunity" title="Description of icon when needed">
+                <lightning:icon iconName="standard:quotes" />
+
+              </span>
+            </div>
+            <div class="slds-media__body">
+              <nav>
+                <ol class="slds-breadcrumb slds-line-height_reset">
+                  <li class="slds-breadcrumb__item">
+                      <span><ui:outputText value="{!v.objectName}"/></span>
+                  </li>
+                </ol>
+              </nav>
+              <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate" title="{!v.recordTitle}">
+                  <ui:outputText value="{!v.recordTitle}"/>
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-no-flex slds-grid slds-align-top">          
+          <div class="slds-button-group" role="group">
+              {!v.body}              
+          </div>
+        </div>
+      </div>
+      <ul class="slds-grid slds-page-header__detail-row">        
+        <aura:iteration items="{!v.titleFields}" var="field"> 
+          <li class="slds-page-header__detail-block">
+            <p class="slds-text-title slds-truncate slds-m-bottom_xx-small" title="{!field.label}"><ui:outputText value="{!field.label}"/></p>
+            <aura:if isTrue="{! field.value.id }">
+              <!-- <aura:if isTrue="{! and(field.value.id gt '005', field.value.id lt '006')}">
+                <lightning:avatar src="{! '/profilephoto/' + field.value.id + '/T'" alternativeText="{!field.value.label}"/>
+                <aura:set attribute="else"> -->
+                  <p id="{!'ref-'+field.value.id}" name="{!'ref-'+field.value.id}" 
+                    class="slds-text-title slds-truncate slds-m-bottom_xx-small" title="{!field.value.label}">
+                    <a id="{!field.value.id}" href="javascript:void(0);" onclick="{!c.navigate}">
+                      <ui:outputText value="{!field.value.label}"/>
+                    </a>
+                  </p>
+                <!-- </aura:set> 
+              </aura:if>-->
+              
+              <aura:set attribute="else">
+                <p class="slds-text-body_regular slds-truncate" title="{!field.value}">
+                  <ui:outputText value="{!field.value}"/>
+                </p>
+              </aura:set>
+            </aura:if>
+          </li>
+        </aura:iteration>      
+      </ul>
+    </div>
+    
+
+</aura:component>

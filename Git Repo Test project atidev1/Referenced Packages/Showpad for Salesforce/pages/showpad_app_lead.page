@@ -1,0 +1,12 @@
+<apex:page standardController="Lead">
+<apex:canvasApp developerName="showpad_canvas_app" parameters="{domain:'{!$Setup.Showpad_API_Setting__c.Showpad_Subdomain__c}'}" entityFields="*" width="100%"/>
+<script> 
+    window.onload = function() {
+        var showpadCanvasIframe = document.getElementsByTagName('IFRAME')[0];
+        var body = document.body;
+        var html = document.documentElement;
+        showpadCanvasIframe.style.height = '100%';
+        showpadCanvasIframe.style.position = 'absolute';
+    }
+</script>
+</apex:page>

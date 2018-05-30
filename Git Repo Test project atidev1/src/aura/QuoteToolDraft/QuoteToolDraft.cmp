@@ -1,0 +1,59 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global"
+                controller="QuoteToolDraftsCtrl">
+    <aura:attribute access="public" name="recordId" type="string" />
+    
+    <aura:attribute access="private" name="recordData" type="Object" />
+    <aura:attribute access="private" name="picklistValues" type="Object" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    
+    <force:recordData aura:id="theRecord"
+                      recordId="{!v.recordId}"
+                      targetFields="{!v.recordData}"
+                      layoutType="FULL"
+                      recordUpdated="{!c.recordUpdated}"/>
+    
+    <lightning:card title="Sales Order Form" iconName="standard:drafts" >
+        <aura:set attribute="actions">
+            <lightning:button label="Submit"/>
+        </aura:set>
+        <aura:set attribute="footer">
+            <div style="position:relative; text-align: left;">
+                <div class="slds-text-heading_small">Fill in your Sales Order Form details:</div>
+                <div>
+                
+                    <lightning:select aura:id="selectColor" label="Select a color" required="true" messageWhenValueMissing="Please select a value">
+                        <option value="">-- None --</option>
+                        <aura:iteration items="{!v.picklistValues.CabinetColorList}" var="color">
+                            <option value="{!color.Label}" text="{!color.Value__c}"></option>
+                        </aura:iteration>
+                    </lightning:select>            
+                                
+                    <lightning:select aura:id="selectProduct" label="Select a product" required="true" messageWhenValueMissing="Please select a value">
+                        <option value="">-- None --</option>
+                        <aura:iteration items="{!v.picklistValues.ProductList}" var="product">
+                            <option value="{!product.Label}" text="{!product.Value__c}"></option>
+                        </aura:iteration>
+                    </lightning:select>  
+                                
+                    <lightning:select aura:id="selectContact" label="Select a contact" required="true" messageWhenValueMissing="Please select a value">
+                        <option value="">-- None --</option>
+                        <aura:iteration items="{!v.picklistValues.Contact}" var="contact">
+                            <option value="{!contact.Id}" text="{!contact.Name}"></option>
+                        </aura:iteration>
+                    </lightning:select>  
+                    
+                </div>                
+                <div class="slds-spinner_container slds-hide" aura:id="InProgress">
+                    <div class="slds-spinner slds-spinner--small" aria-hidden="false" role="status">
+                      <div class="slds-spinner__dot-a"></div>
+                      <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+			</div>
+        </aura:set>
+        <p class="slds-p-horizontal_small">
+            
+        </p>
+    </lightning:card>
+</aura:component>

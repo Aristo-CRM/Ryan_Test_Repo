@@ -1,0 +1,4 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <aura:attribute access="public" name="recordId" type="string" />
+    <c:ATIProductListBuilder recordId="{!v.recordId}"/>
+</aura:component>

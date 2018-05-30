@@ -1,0 +1,5 @@
+<apex:page tabStyle="Case">
+    <apex:pageBlock >
+        This is a test        
+    </apex:pageBlock>
+</apex:page>

@@ -1,0 +1,22 @@
+<apex:page controller="ShowpadForSF.ShowpadConfigController">
+<br/>
+<apex:image value="{!$Resource.ShowpadForSF__showpad_logo}" width="300"/>
+<br/><br/>
+<apex:pageMessages />
+<apex:form >
+<apex:pageBlock id="myPgBlk" title="Showpad Account">
+    <apex:pageBlockSection columns="1">
+        <apex:inputField value="{!setting.ShowpadForSF__Showpad_Subdomain__c}"/>
+        <apex:pageBlockSectionItem >
+            <div></div>
+            <apex:outputPanel id="outPanel">
+                <apex:commandButton action="{!save}" value="Save"/>&nbsp;&nbsp;
+                <apex:outputText style="color:#ff0000;" value="{!responseText}"/>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+</apex:pageBlock>
+
+</apex:form>
+
+</apex:page>

@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="Value Change event for Lightning Component CustomInput" >
+    <aura:attribute name="name" type="String" />
+    <aura:attribute name="value" type="Object" />
+    <aura:attribute name="params" type="Object" default="null" />
+</aura:event>

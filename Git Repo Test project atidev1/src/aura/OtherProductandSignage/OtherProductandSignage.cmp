@@ -1,0 +1,153 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute access="public" name="EditMode" type="Boolean" default="true" />
+    <aura:attribute access="private" name="Fields" type="Object" default="{}" />
+    
+    <aura:attribute access="private" name="testDate" type="String" default="" />
+    <aura:attribute access="private" name="testValue" type="Object" />
+    
+    <aura:attribute access="public" name="recordInfo" type="Object" />
+    
+    <aura:attribute access="private" name="lineItems" type="Object[]" default="[]" />
+    <aura:attribute access="private" name="sectionOpen" type="Boolean" default="true" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    
+    <lightning:card title="OTHER PRODUCTS/SIGNAGE" iconName="standard:account">
+        <aura:set attribute="actions">
+        </aura:set>
+        
+        <p class="slds-p-horizontal_small">
+            <div class="slds-form slds-form_compound">
+                
+            </div>
+        </p>
+        
+        
+        <div class="slds-section slds-is-open">
+            <!--
+            <h3 class="slds-section__title">
+                <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action" onclick="{!c.toggleSection}">
+                    <lightning:buttonIcon iconName="utility:switch" size="small" class="slds-section__title-action-icon slds-button__icon slds-button__icon_left"/>  
+                    <span class="slds-truncate" title="EGM Line Items">EGM Line Items (collapseble section)</span>
+                </button>
+            </h3>
+			-->
+            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id">
+                
+                <p class="slds-p-horizontal_small">      
+                    <div class="slds-form slds-form_compound">
+                        <!--
+                        <aura:iteration items="{!v.lineItems}" var="item" indexVar="i">
+                            <fieldset class="slds-form-element"> -->
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row slds-wrap">
+                                        <!--
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.combobox1}"/>
+                                        </div>
+                                        -->
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="{!v.recordInfo.Does_the_customer_require__c}" EditMode="{!v.EditMode}" field="{!v.Fields.combobox}"/> 
+                                        </div> 
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="{!v.recordInfo.X2nd_Bank_of_Lightning_Link__c}" EditMode="{!v.EditMode}" field="{!v.Fields.combobox4}"/>
+                                        </div>
+                                        <!-- 
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <ui:inputTextArea aura:id="comments" label="Comments" value="{!v.recordInfo.Contents__c}" rows="5"/>
+                                             
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <ui:inputTextArea aura:id="comments" label="Comments" value="{!v.recordInfo.QuoteLineItems__c}" rows="5"/>
+                                             
+                                        </div> -->
+                                        
+                                         <!--
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.combobox2}"/>
+                                        </div> 
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.combobox3}"/>
+                                        </div> 
+                                        
+                                        
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.combobox5}"/>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.combobox6}"/>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.field2}"/>
+                                        </div>  
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.field3}"/>
+                                        </div> 
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.field4}"/>
+                                        </div> 
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.field5}"/>
+                                        </div> 
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.field6}"/>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.textarea}"/>
+                                        </div>
+                                        -->
+                                    </div>
+                                </div>
+                        
+                        		<div class="slds-form-element__group">
+                                    <div class="slds-form-element__row slds-wrap">
+                                        <!--
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.hubname}"/>
+                                        </div> 
+                                        
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <c:CustomInput value="" EditMode="{!v.EditMode}" field="{!v.Fields.emailText}"/>
+                                        </div> 
+                                        -->
+                                    </div>
+                                </div>
+                        
+                        <!--
+                            </fieldset>
+                        </aura:iteration>
+                        -->
+                        
+                    </div>
+                    <!--
+                    <lightning:buttonIcon iconName="utility:new" size="x-small" alternativeText="Add New Line" onclick="{!c.addLineItem}" />
+					-->
+                </p> 
+                
+            </div>
+        </div>        
+        
+        
+        
+        
+        
+        
+        
+        <aura:set attribute="footer"> 
+        </aura:set>
+        
+        <aura:set attribute="footer">      
+            
+        </aura:set>
+    </lightning:card>
+</aura:component>

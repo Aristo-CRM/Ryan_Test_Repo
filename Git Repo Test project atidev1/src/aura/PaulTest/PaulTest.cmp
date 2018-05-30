@@ -1,0 +1,44 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride" access="global" >
+<!-- <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" > -->
+  <aura:attribute access="private" name="fields" type="Object[]" default="" />
+  <aura:attribute access="private" name="records" type="Object[]" default="" />
+
+  <aura:attribute access="private" name="testDate" type="String" default="" />
+  <aura:attribute access="private" name="testValue" type="Object" />
+    
+  <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+
+  <div class="slds-form-element__group">
+    <div class="slds-form-element__row slds-wrap">
+
+
+      <div class="slds-form-element slds-size_1-of-4">
+        <c:CustomInput value="" EditMode="true" apiField="Account.Name"/>
+      </div>
+
+
+<!--       <div class="slds-form-element slds-size_1-of-4">
+        <c:CustomInput value="" EditMode="true" field="{!v.fields[0]}"/>
+      </div>
+ -->
+
+      <br/><br/>
+    </div>
+  </div>
+
+	<lightning:card title="Paul Test Component" iconName="standard:account">
+    <aura:set attribute="actions">
+        
+    </aura:set>
+
+    <p class="slds-p-horizontal_small">
+      
+        <c:InputArray records="{!v.records}" fields="{!v.fields}" />
+
+      
+    </p>
+    <aura:set attribute="footer">      
+                
+    </aura:set>
+	</lightning:card>
+</aura:component>

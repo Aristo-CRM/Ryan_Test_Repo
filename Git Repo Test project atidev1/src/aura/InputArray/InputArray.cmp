@@ -1,0 +1,97 @@
+<aura:component >
+    <!-- <aura:attribute access="public" name="id" type="string" /> -->
+    <aura:attribute access="public" name="fields" type="object[]" />
+    <aura:attribute access="public" name="records" type="object[]" />
+    <aura:attribute access="public" name="readOnly" type="Boolean" default="false" />
+
+    <aura:attribute access="public" name="customEvents" type="Boolean" default="false" />
+    <aura:attribute access="public" name="recordData" type="String" />
+
+    <aura:attribute access="private" name="isMobileDevice" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    <aura:handler name="recordValueChange" event="c:CustomInputChange" action="{!c.handleValueChange}"/>
+    <aura:registerEvent name="recordSetValueChange" type="c:CustomInputChange"/>
+    
+    <div class="slds-table_edit_container slds-is-relative" >
+      <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout slds-no-cell-focus slds-table_edit" 
+             role="grid">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th scope="col" style="width: 2rem;">
+              <span id="check-group-header" class="slds-assistive-text">Choose a row</span>
+              <div class="slds-th__action slds-th__action_form">
+                <span class="slds-checkbox">
+                  <lightning:input type="checkbox" class="field" onchange="{!c.selectAll}" aura:id="check-toprow"/>
+                </span>
+              </div>
+            </th>
+            <aura:iteration items="{!v.fields}" var="field">
+              <th aria-sort="none" class="{! 'slds-text-title_caps' + (v.isMobileDevice ? ' min-column-size': '')}" aria-label="Name" 
+                scope="col" style="{! (field.columnSize ? 'width: ' + field.columnSize + 'rem;': '')}">
+                
+                <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                  <span class="slds-assistive-text">Sort by: </span>
+                  <span class="slds-truncate" title="{!field.hint}">
+                    <ui:outputText value="{!field.label}"/>
+                    <aura:if isTrue="{!field.hint}" >
+                      <lightning:icon iconName="utility:info" size="xx-small"/>
+                    </aura:if>
+                  </span>
+                </a>  
+                <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true">Sorted none</span>
+              </th>
+            </aura:iteration>        
+            <th scope="col" style="width: 1.75rem;">
+              <div class="slds-th__action">
+                <span class="slds-assistive-text">Actions</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <aura:iteration items="{!v.records}" var="lineItem" indexVar="i">
+          <tr class="slds-hint-parent">
+            <td class="slds-cell-edit" role="gridcell">
+              <span class="slds-checkbox">                
+                <lightning:input aura:id="select-row" type="checkbox" class="field" onchange="{!c.selectRow}" name="{!'checkbox-' + (i+1)}" tabindex="-1"/> 
+              </span>
+            </td>
+            <c:InputArrayItem fields="{!v.fields}" record="{!lineItem}" readOnly="{!v.readOnly}" index="{!i}"/>
+            <td class="slds-cell-edit" role="gridcell" id="{!'item-'+i}">                
+              <aura:if isTrue="{! !v.readOnly}">
+                <lightning:buttonIcon name="{!'rowItem-'+i}" iconName="utility:copy" size="xx-small" alternativeText="Clone" type="button" onclick="{!c.clone}"/>
+                <!--
+                <lightning:buttonMenu name="{!'rowItem-'+i}" alternativeText="More Actions" onselect="{! c.clickMenu }" iconSize="x-small" menuAlignment="right">
+                    <lightning:menuItem label="Remove Line" value="menuRemove" 
+                                        iconName="action:remove"/>
+                    <lightning:menuItem label="Clone" value="menuClone" 
+                                        iconName="action:clone" />
+                </lightning:buttonMenu>                
+              -->
+              </aura:if>
+            </td>
+          </tr>
+          </aura:iteration>      
+        </tbody>
+      </table>
+    </div>    
+    <aura:if isTrue="{! !v.readOnly}">
+      <div style="height: 12em;"/>
+      <p style="text-align: left; width: 100%">
+        <span style="text-align: left">
+          <lightning:button variant="destructive" iconName="action:remove" iconPosition="left" 
+            label="Remove" onclick="{!c.removeItems}" aura:id="bntRemove" disabled="true" />
+        </span>
+        &nbsp;
+        <span style="text-align: right">
+          <lightning:button variant="success" iconName="utility:add" iconPosition="left" 
+            label="Add another" onclick="{!c.addItem}" />
+        </span>
+      </p>
+    </aura:if>
+    <br/>
+    <br/>
+    <div style="display: none;">
+      <ui:outputTextArea value="{!v.recordData}"/>
+    </div>
+</aura:component>

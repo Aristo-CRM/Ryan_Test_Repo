@@ -1,0 +1,11 @@
+.THIS .text-area-size TEXTAREA{
+    height: 93px;
+}
+
+.THIS .disable-input INPUT {
+	pointer-events: none;
+}
+
+.THIS .disable-input TEXTAREA {
+	pointer-events: none;
+}

@@ -1,0 +1,20 @@
+<aura:component controller="ATIQuoteDraftLineItemsCtrl">
+    <aura:attribute access="public" name="id" type="String" />    
+    <aura:attribute access="public" name="records" type="Object[]" />    
+    <aura:attribute access="public" name="readOnly" type="Boolean" default="false" />    
+    <aura:attribute access="public" name="fields" type="Object[]"  />
+    
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.onInit}"/> -->
+    <aura:handler name="recordSetValueChange" event="c:CustomInputChange" action="{!c.handleValueChange}"/>
+    <aura:registerEvent name="mainRecordValueChange" type="c:CustomInputChange"/>
+
+    <aura:if isTrue="{!and(v.fields, v.fields.length > 0)}" >
+        <c:InputArray records="{!v.records}" fields="{!v.fields}" readOnly="{!v.readOnly}"/>
+        <aura:if isTrue="{! v.records.length == 0}" >
+            No line items found!
+        </aura:if>
+        <aura:set attribute="else">
+            No data to display!
+        </aura:set>
+    </aura:if>
+</aura:component>

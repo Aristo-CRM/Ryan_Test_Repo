@@ -1,0 +1,23 @@
+.THIS {
+}
+
+.THIS .slds-form-element__label {
+    display: none;
+}
+
+.THIS .form-element__label {
+    display: none;
+}
+
+.THIS .slds-input input[type="number"] {
+    min-length: 55em;
+}
+
+.THIS .slds-has-error .slds-form-element__help {
+    display: none;
+}
+
+/*
+.THIS TH {
+	min-width: 18rem;
+}*/

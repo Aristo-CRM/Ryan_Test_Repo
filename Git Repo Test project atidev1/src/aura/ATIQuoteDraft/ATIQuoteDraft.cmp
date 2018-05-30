@@ -1,0 +1,350 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride" access="global" controller="ATIQuoteDraftCtrl" >
+    
+<aura:attribute access="public" name="recordId" type="String" />
+<aura:attribute access="public" name="oppId" type="String" />
+<aura:attribute access="public" name="title" type="String" required="true" default="test"/>
+
+<aura:attribute access="private" name="recordData" type="Object"/>
+
+<aura:attribute access="private" name="orderLineItems" type="Object[]" />
+<aura:attribute access="private" name="conversionLineItems" type="Object[]" />
+<aura:attribute access="private" name="tradeInLineItems" type="Object[]" />
+<aura:attribute access="private" name="sparePartLineItems" type="Object[]" />
+
+<aura:attribute access="private" name="orderLineItemsData" type="string" />
+<aura:attribute access="private" name="conversionLineItemsData" type="string" />
+<aura:attribute access="private" name="tradeInLineItemsData" type="string" />
+<aura:attribute access="private" name="sparePartLineItemsData" type="string" />
+
+<aura:attribute access="private" name="toggle" type="Object" />
+<aura:attribute access="private" name="readOnly" type="Boolean" default="false" />
+<aura:attribute access="private" name="cmpSettings" type="Object" />
+
+<aura:attribute access="private" name="titleFields" type="Object[]" />
+<aura:attribute access="private" name="cloneOppId" type="string" default="{!v.oppId}"/>
+<aura:attribute access="private" name="status" type="string" />
+
+<aura:handler name="init" value="{!this}" action="{!c.onPreInit}"/>
+<aura:handler name="change" value="{!v.cmpSettings}" action="{!c.onInitComplete}"/>
+
+<aura:handler name="change" value="{!v.orderLineItems}" action="{!c.lineItemChanged}"/>
+<aura:handler name="mainRecordValueChange" event="c:CustomInputChange" action="{!c.handleValueChange}"/>
+  <div> <!--  style="zoom: 90%"> -->
+    <lightning:recordEditForm       
+      aura:id="recordViewForm" 
+      recordId="{!v.recordId}" 
+      objectApiName="Quote_Tool_Drafts__c"
+      onload="{!c.handleLoadComplete}"
+      onsubmit="{!c.preSubmit}"
+      onsuccess="{!c.handleSuccess}" > 
+
+      <c:ATIPageHeader objectName="Quote Request Form" recordTitle="{! v.recordData.Name + ' – ' + v.recordData.Status__c}"
+            titleFields="{!v.titleFields}">
+        <aura:if isTrue="{! !v.readOnly}">
+          <lightning:button aura:id="submit" label="Save" type="submit"/> <!-- onclick="{!c.saveRecord}"  -->
+        </aura:if>
+        <aura:if isTrue="{! and(!v.readOnly, v.recordId)}" >        
+          <lightning:button label="Submit" onclick="{!c.submitRecord}" variant="success" type="button"/>&nbsp;
+        </aura:if>
+        <aura:if isTrue="{! and(v.readOnly, !v.cmpSettings.isMobileDevice)}">
+          <lightning:button label="Duplicate" onclick="{!c.duplicateRecord}" variant="brand" type="button" /> 
+        </aura:if>
+      </c:ATIPageHeader>
+      <lightning:messages />
+          
+      <lightning:card title=""> 
+
+        <aura:set attribute="actions"> </aura:set>
+        <p class="{! 'slds-p-horizontal_small '}"> <!--  + (v.readOnly ? ' disable-input': '') -->
+          
+          <div class="slds-grid slds-gutters" style="display: none;">
+             <div class="slds-col">
+              <div class="slds-form slds-form_horizontal">
+                  <div class="slds-form-element">
+                      <lightning:inputField aura:id="inputOpp" fieldName="Opportunity__c" />
+                  </div>
+                  <div class="slds-form-element">
+                      <lightning:inputField aura:id="inputStatus" fieldName="Status__c" value="{!v.status}"/>
+                  </div>
+              </div>
+            </div>
+            <div class="slds-col"/>
+          </div>
+          <label class="slds-form-element__label" for="unique-id-of-input">
+            <div class="slds-text-title_caps">Submission target details</div>
+          </label>
+          <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+              
+              <div class="slds-form slds-form_compound">
+                <fieldset class="slds-form-element">
+                  <div class="slds-form-element__group">
+                    <div class="slds-form-element__row slds-wrap">
+                      <div class="slds-form-element slds-size_1-of-1" >
+                        <aura:if isTrue="{! !v.readOnly}">                              
+                          <lightning:inputField class="text-area-size" fieldName="Description__c" />                         
+                          <aura:set attribute="else">
+                            <lightning:outputField class="text-area-size" fieldName="Description__c" />
+                          </aura:set>
+                        </aura:if>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>       
+            </div>
+            <div class="slds-col" style="{! v.readOnly ? 'pointer-events:none;' : ''}">
+              <div class="slds-form slds-form_compound">
+                <fieldset class="slds-form-element">
+                  <div class="slds-form-element__group">
+                    <div class="slds-form-element__row slds-wrap">
+                      <div class="slds-form-element slds-size_1-of-3" >                         
+                        <lightning:inputField fieldName="HubName__c" />
+                      </div>
+                    </div>
+                    <div class="slds-form-element__row slds-wrap">                    
+                      <div class="slds-form-element slds-size_1-of-3" >                        
+                        <lightning:inputField fieldName="EmailCC__c" alternativeText="Pick a person to include in email correspondence"/>
+                      </div>                      
+                    </div>
+                  </div>
+                </fieldset>
+              </div>       
+            </div>
+          </div>
+
+          <!-- Mockup part -->
+          <div class="{! 'slds-section' + (v.toggle.sectionMock1 ? '' : ' slds-is-open')}">
+            <h3 class="slds-section__title">
+              <button id="sectionMock1" aria-controls="sectionMock1" aria-expanded="true" onclick="{!c.toggle}" type="button"
+                class="slds-button slds-section__title-action slds-button_icon-small slds-button_icon-border">
+                <lightning:buttonIcon iconName="utility:switch" size="small" alternativeText="" type="button"
+                  class="slds-section__title-action-icon slds-button__icon slds-button__icon_left"/>
+                <span class="slds-truncate" title="Section Title">General information</span>
+              </button>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content" id="sectionMock1" >
+        
+              <div class="slds-form slds-form_compound">
+                <fieldset class="slds-form-element">
+                  <div class="slds-form-element__group">
+                    <div class="slds-form-element__row slds-wrap">
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="PaymentTerms__c"/>
+                      </div>
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="Pricing__c" />
+                      </div>
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField aura:id="inputEntitlement" fieldName="TradeIn_Entitlement__c"/>
+                      </div>
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="Special_Discount__c" />
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>     
+
+          <!-- End Mockup part -->
+          <div class="{! 'slds-section' + (v.toggle.section1 ? '' : ' slds-is-open')}">
+            <h3 class="slds-section__title">
+              <button id="section1" aria-controls="section1" aria-expanded="true" class="slds-button slds-section__title-action" 
+                onclick="{!c.toggle}"  type="button">
+                <lightning:buttonIcon iconName="utility:switch" size="small" alternativeText="" type="button"
+                  class="slds-section__title-action-icon slds-button__icon slds-button__icon_left"/>
+                <span class="slds-truncate" title="Section Title">Quote Line Items</span>
+              </button>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content array-section" id="section1" style="background: #fafaf9;overflow-x: auto;overflow-y: hidden;">
+              <c:ATIQuoteDraftLineItems records="{!v.orderLineItems}" readOnly="{!v.readOnly}" fields="{!v.cmpSettings.metadata.quoteLineItems}" 
+                 id="orderLineItems"/>
+              <div style="{!v.cmpSettings.verbose ? '' : 'display: none;'}">
+                <lightning:inputField fieldName="QuoteLineItems__c" value="{!v.orderLineItemsData}"/>              
+              </div>
+            </div>
+          </div>
+                          
+          <div class="{! 'slds-section' + (v.toggle.section2 ? '' : ' slds-is-open')}">
+            <h3 class="slds-section__title">
+              <button id="section2" aria-controls="section2" aria-expanded="true" class="slds-button slds-section__title-action" 
+                onclick="{!c.toggle}" type="button">
+                <lightning:buttonIcon iconName="utility:switch" size="small"  alternativeText=""
+                  class="slds-section__title-action-icon slds-button__icon slds-button__icon_left"/>
+                <span class="slds-truncate" title="Section Title">Conversion Line Items</span>
+              </button>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content array-section" id="section2" style="background: #fafaf9;overflow-x: auto;overflow-y: hidden;">
+              <c:ATIQuoteDraftConversionLines records="{!v.conversionLineItems}" readOnly="{!v.readOnly}" fields="{!v.cmpSettings.metadata.conversionLineItems}"
+                 id="conversionLineItems"/>
+              <div style="{!v.cmpSettings.verbose ? '' : 'display: none;'}">
+                <lightning:inputField fieldName="ConversionLineItems__c" value="{!v.conversionLineItemsData}"/>              
+              </div>
+            </div>
+          </div>            
+
+          <!-- Mockup part 2 -->
+          <div class="{! 'slds-section' + (v.toggle.sectionMock3 ? '' : ' slds-is-open')}">
+            <h3 class="slds-section__title">
+              <button id="sectionMock3" aria-controls="sectionMock3" aria-expanded="true" class="slds-button slds-section__title-action" 
+                onclick="{!c.toggle}" type="button">
+                <lightning:buttonIcon iconName="utility:switch" size="small" alternativeText="" type="button"
+                  class="slds-section__title-action-icon slds-button__icon slds-button__icon_left"/> 
+                <span class="slds-truncate" title="Section Title">Trade In / Entitlement Details</span>
+              </button>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content" id="sectionMock3" style="background: #fafaf9;overflow-x: auto;overflow-y: hidden; max-width: 34em;">
+              <c:ATIQuoteDraftTradeIns readOnly="{!v.readOnly}" records="{!v.tradeInLineItems}" fields="{!v.cmpSettings.metadata.tradeInLineItems}"
+                id="tradeInLineItems"/>
+              <div style="{!v.cmpSettings.verbose ? '' : 'display: none;'}">
+                <lightning:inputField fieldName="TradeInLineItems__c" value="{!v.tradeInLineItemsData}"/>              
+              </div>
+            </div>
+          </div>     
+
+          <div class="{! 'slds-section' + (v.toggle.sectionMock4 ? '' : ' slds-is-open')}">
+            <h3 class="slds-section__title">
+              <button id="sectionMock4" aria-controls="sectionMock4" aria-expanded="true" class="slds-button slds-section__title-action" 
+                onclick="{!c.toggle}" type="button">
+                <lightning:buttonIcon iconName="utility:switch" size="small"  alternativeText="" type="button"
+                  class="slds-section__title-action-icon slds-button__icon slds-button__icon_left"/>
+                <span class="slds-truncate" title="Section Title">Spare Parts</span>
+              </button>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content" id="sectionMock4" style="background: #fafaf9;overflow-x: auto;overflow-y: hidden; max-width: 34em;">  
+              <c:ATIQuoteDraftSpareParts readOnly="{!v.readOnly}" records="{!v.sparePartLineItems}" fields="{!v.cmpSettings.metadata.sparePartLineItems}"              
+                  id="sparePartLineItems"/>   
+              <div style="{!v.cmpSettings.verbose ? '' : 'display: none;'}">
+                <lightning:inputField fieldName="SparePartLineItems__c" value="{!v.sparePartLineItemsData}" />         
+              </div>
+            </div>
+          </div>   
+
+          <div class="{! 'slds-section' + (v.toggle.sectionMock2 ? '' : ' slds-is-open')}">
+            <h3 class="slds-section__title">
+              <button id="sectionMock2" aria-controls="sectionMock2" aria-expanded="true" class="slds-button slds-section__title-action" 
+                onclick="{!c.toggle}" type="button">
+                <lightning:buttonIcon iconName="utility:switch" size="small" alternativeText=""
+                  class="slds-section__title-action-icon slds-button__icon slds-button__icon_left"/>
+                <span class="slds-truncate" title="Other Products/Signage">Other Products/Signage</span>
+              </button>
+            </h3>
+            <div aria-hidden="false" class="slds-section__content" id="sectionMock2" style="{! v.readOnly ? 'pointer-events:none;' : ''}">      
+
+              <div class="slds-grid slds-gutters">
+                <div class="slds-col" style="max-width: 50%">
+          
+                  <div class="slds-form" style="max-width: 22em;">
+                     <div class="slds-form-element">
+                        <lightning:inputField fieldName="NewLinkInstall__c" />
+                        <lightning:inputField fieldName="CustomTopperRequirements__c" />
+                        <lightning:inputField fieldName="TargetIsExistingEGMBankLink__c" />
+                      </div>
+                  </div>
+                </div>
+                <div class="slds-col" style="max-width: 50%">
+                  <div class="slds-form">
+                    <label class="slds-form-element__legend slds-form-element__label">Please select all applicable checkboxes:</label>
+                    <fieldset class="slds-form-element">                     <!-- style="text-indent: 2.75em;" -->
+                      <br/>
+                      <div class="slds-form-element__control">
+                        <lightning:inputField fieldName="InstallLinkOn1Bank__c" />
+                        <lightning:inputField fieldName="X2ndBankOfLink__c" />
+                        <lightning:inputField fieldName="X3rdBankOfLink__c" />
+                        <lightning:inputField fieldName="X4thBankOfLink__c" />
+                      </div>
+                    </fieldset>             
+                  </div>
+                </div>
+              </div>
+                
+              <br/>
+
+              <div class="slds-form slds-form_compound">
+                <label class="slds-form-element__label" for="unique-id-of-input">
+                  <div class="slds-text-title_caps">Please select in the following that is relevant to the venue</div>
+                </label>
+                <fieldset class="slds-form-element">                
+                 <div class="slds-form-element__group">
+                    <div class="slds-form-element__row slds-wrap">
+                      
+                      <div class="slds-form-element slds-size_1-of-6">                                  
+                        <lightning:inputField fieldName="Asrock_Media_Player__c" />
+                      </div>
+                      
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="Controller__c" />
+                      </div>
+
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="HDMI_Kit__c" />
+                      </div>
+
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="HDMI_Add_on_Kit__c" />
+                      </div>
+
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="SEI__c" />
+                      </div>
+
+                      <div class="slds-form-element slds-size_1-of-6">          
+                        <lightning:inputField fieldName="Graphics_Sequence__c" />
+                      </div>
+
+                    </div>
+                  </div>
+        
+                </fieldset>
+              </div>          
+
+            </div>    
+          </div> 
+          <!-- End Mockup part 2 -->
+
+        </p>
+        <aura:set attribute="footer">      
+            <div style="position:relative; text-align: left;"/>
+        </aura:set>
+    	</lightning:card>
+      <br/>
+    </lightning:recordEditForm>     
+  </div>
+
+  <!-- Modal Dialog used for Duplication -->
+  <aura:if isTrue="{! v.readOnly}">        
+    <div style="{! 'height: 800px; ' + (!v.toggle.duplicateModal ? 'display: none;' : '')}">
+      <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-slide-up-saving">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header" aria-controls="duplicateModal" >
+            <lightning:buttonIcon class="slds-modal__close slds-button_icon-inverse" iconName="utility:close"  variant="bare-inverse" title="close" 
+              alternativeText="Close window" size="large" onclick="{!c.toggle}" type="button"/>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Duplicate Quote Form</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <lightning:recordEditForm recordId="" objectApiName="Quote_Tool_Drafts__c">
+              <div style="height: 400px;" >
+                <p>Pick an existing opportunity and click save to continue.</p>
+                <br/>
+                <div style="max-width: 32em;">
+                  <lightning:inputField fieldName="Opportunity__c" aura:id="newOppId" />
+                </div>            
+              </div>
+
+              <p>All information on the current quote will be duplicated once you click the Save button.</p>
+            </lightning:recordEditForm>
+          </div>
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" type="button" aria-controls="duplicateModal" onclick="{!c.toggle}">Cancel</button>
+            <button class="slds-button slds-button_brand" type="button" onclick="{!c.runDuplicate}" enabled="{!v.cloneOppId}">Save</button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" aria-controls="duplicateModal" onclick="{!c.toggle}"></div>
+    </div>
+  </aura:if>
+  <!--END: Modal Dialog used for Duplication -->
+
+</aura:component>

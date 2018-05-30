@@ -1,0 +1,3 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+    <c:ATIQuoteDraft recordId="a0u0k000000WJcpAAG"/>
+</aura:component>

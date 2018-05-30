@@ -1,0 +1,31 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" 
+	access="global" controller="DocuSignLauncherCtrl">
+
+	<aura:attribute name="recordId" type="Id" access="public" />
+	
+	<aura:attribute name="docData" type="Object" access="private" />
+	<aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+	<lightning:card title="Request Document Signing" iconName="standard:contract">
+		<aura:set attribute="actions">		
+
+		</aura:set>
+
+		<p class="slds-p-horizontal_small">
+			<lightning:select aura:id="selectTarget" label="Select a target" onchange="{!c.changeInput}">
+				<option value="">choose a recepient...</option>
+				<aura:iteration items="{!v.docData.Contacts}" var="trg">
+					<option value="{!trg.Id}">{!trg.Name}</option>
+				</aura:iteration>        
+			</lightning:select>
+
+			<lightning:select aura:id="selectTemplate" label="Select a template" onchange="{!c.changeInput}">
+				<option value="">choose a template...</option>
+				<aura:iteration items="{!v.docData.Templates}" var="tmp">
+					<option value="{!tmp.Id}">{!tmp.Name}</option>
+				</aura:iteration>
+			</lightning:select>
+		</p>
+	</lightning:card>
+
+</aura:component>

@@ -1,0 +1,44 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute access="private" name="EditMode" type="Boolean" default="true" />
+    <aura:attribute access="private" name="Fields" type="Object" default="{}" />
+    
+    <aura:attribute access="private" name="testDate" type="String" default="" />
+    <aura:attribute access="private" name="testValue" type="Object" />
+    
+    <aura:attribute access="private" name="lineItems" type="Object[]" default="[]" />
+    <aura:attribute access="private" name="sectionOpen" type="Boolean" default="true" />
+
+    <aura:attribute access="private" name="show" type="Boolean" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    
+    <!-- <c:OtherProductandSignage /> -->
+
+		<lightning:button onclick="{!c.toggle}" label="Add Products" variant="brand"/>
+ 
+    <div class="{!v.show ? '':'slds-hide'}">
+	   	<div style="height: 800px;">
+			  <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_medium">
+			    <div class="slds-modal__container">
+			      <header class="slds-modal__header">			        
+		          <lightning:buttonIcon class="slds-modal__close slds-button_icon-inverse" iconName="utility:close"  variant="bare-inverse" title="close" 
+            alternativeText="Close window" size="large" onclick="{!c.toggle}" type="button"/>
+		          <span class="slds-assistive-text">Close</span>
+			        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Products</h2>
+			      </header>
+			      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+			      	 <c:ATIProductListBuilder />
+			      </div>
+			      <footer class="slds-modal__footer">
+			        <lightning:button class="slds-button slds-button_neutral">Cancel</lightning:button>
+			        <lightning:button class="slds-button slds-button_brand" disabled="{! or(v.selection.length == 0, !v.selection)}">Next</lightning:button>
+			        <aura:if isTrue="false">
+			        	<lightning:button class="slds-button slds-button_brand">Save</lightning:button>
+			        </aura:if>
+			      </footer>
+			    </div>
+				</section>
+	    	<div class="slds-backdrop slds-backdrop_open"/>
+			</div>
+		</div>
+</aura:component>

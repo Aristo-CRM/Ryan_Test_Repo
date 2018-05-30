@@ -1,0 +1,29 @@
+.THIS .text-area-size TEXTAREA{
+    height: 93px;
+}
+
+.THIS .disable-input INPUT {
+	pointer-events: none;
+}
+
+.THIS .disable-input TEXTAREA {
+	pointer-events: none;
+}
+
+.THIS .modal-dlg {
+	vertical-align: middle;
+}
+
+.THIS .slds-size_1-of-6 {
+	min-width: 12em;
+}
+
+.THIS .slds-size_1-of-3 {
+	min-width: 11em;
+}
+
+.THIS .array-section {
+	background: #fafaf9;
+	overflow-x: auto;
+	overflow-y: hidden;
+}

@@ -1,0 +1,36 @@
+<aura:component >
+    <aura:attribute access="public" name="fields" type="object[]" />
+    <aura:attribute access="public" name="record" type="object" />
+    <aura:attribute access="public" name="readOnly" type="Boolean" default="false" />
+    <aura:attribute access="public" name="index" type="String" />
+    
+    <aura:attribute access="private" name="recordField" type="object[]" />
+
+    <aura:handler name="fieldValueChange" event="c:CustomInputChange" action="{!c.handleValueChange}"/>    
+
+    <aura:handler name="change" value="{!v.record}" action="{!c.inputChanged}" />
+    <aura:handler name="init" value="{!this}" action="{!c.inputChanged}"/>
+
+    <aura:registerEvent name="recordValueChange" type="c:CustomInputChange"/>
+
+    <aura:iteration items="{!v.recordField}" var="field" indexVar="i">
+		<aura:if isTrue="{!v==0}">
+            <th class="slds-cell-edit" scope="row" tabindex="0">
+                <span class="slds-grid slds-grid_align-spread">
+                    <a href="javascript:void(0);" class="slds-truncate" id="link-01" tabindex="-1" title="{!field.fieldDef.label}">
+                        <ui:outputText value="{!field.fieldDef.label}" />                        
+                    </a>
+                </span>
+            </th>
+            <aura:set attribute="else">
+            <td class="slds-cell-edit" role="gridcell">
+                <span class="slds-grid slds-grid_align-spread">
+                    <span title="{!field.value}"> <!-- style="overflow:unset;" class="slds-truncate" -->
+                        <c:CustomInput value="{!field.value}" field="{!field.fieldDef}" EditMode="{! !v.readOnly}" />
+                    </span>
+                </span>
+            </td>
+            </aura:set>
+        </aura:if>
+    </aura:iteration>      
+</aura:component>

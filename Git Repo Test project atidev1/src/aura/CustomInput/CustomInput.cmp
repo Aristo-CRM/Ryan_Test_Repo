@@ -1,0 +1,69 @@
+<aura:component controller="CustomInputCtrl">
+	<aura:attribute access="public" name="value" type="Object" default="" />
+	<aura:attribute access="public" name="field" type="Object" default="" />
+
+	<aura:attribute access="public" name="apiField" type="Object" default="" />
+	<aura:attribute access="public" name="EditMode" type="Boolean" default="true"/>
+
+	<aura:attribute access="private" name="internalVal" type="Object" default="{!v.value}" />
+
+	<aura:registerEvent name="fieldValueChange" type="c:CustomInputChange"/>
+
+	<aura:handler name="change" value="{!v.value}" action="{!c.handleValueChange}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+	<aura:handler name="lookupEvent" event="c:LookupEvent" action="{!c.lookupChange}"/>
+	<!-- Inputbox for textfield -->    
+	<aura:if isTrue="{!v.field.type == 'string'}">
+		<lightning:input label="{!v.field.label}" class="field" value="{!v.internalVal}" disabled="{! !v.EditMode}"
+			 required="{! !v.field.nillable }" onchange="{!c.valueChanged}" maxlength="{!v.field.length}"/> 		
+	</aura:if>
+
+	<!-- Inputbox for textarea -->    
+	<aura:if isTrue="{!v.field.type == 'textarea'}">		
+		<lightning:textarea label="{!v.field.label}" class="field" value="{!v.internalVal}" disabled="{! !v.EditMode}"
+			 required="{! !v.field.nillable }" onchange="{!c.valueChanged}" maxlength="{!v.field.length}"/> 		
+	</aura:if>
+
+	<!-- Inputbox for checkbox -->    
+	<aura:if isTrue="{!v.field.type == 'boolean'}">
+		<lightning:input type="checkbox" label="{!v.field.label}" class="field" checked="{!v.internalVal}" disabled="{! !v.EditMode}" 
+			onchange="{!c.valueChanged}" /> 		
+	</aura:if>
+
+	<!-- Inputbox for currency -->    
+	<aura:if isTrue="{!v.field.type == 'currency'}">
+		<lightning:input type="number" label="{!v.field.label}" class="field" value="{!v.internalVal}" disabled="{! !v.EditMode}"
+			 formatter="currency" step="0.01" onchange="{!c.valueChanged}" /> 		
+		<!-- <aura:set attribute="else"/> -->
+	</aura:if>
+
+	<!-- Inputbox for select -->    
+	<aura:if isTrue="{!v.field.type == 'picklist'}">
+	    <lightning:select name="select" label="{!v.field.label}" required="{! !v.field.nillable }" 
+	    	disabled="{! !v.EditMode}" value="{!v.internalVal}" onchange="{!c.valueChanged}" 
+	    	messageWhenValueMissing="Please provide a value for this field!">
+	        <option value="">-- None --</option>
+	        <aura:iteration items="{!v.field.picklistValues}" var="item">
+                <option value="{!item.value}" text="{!item.label}" />                        
+	        </aura:iteration>
+	    </lightning:select>
+	</aura:if>
+
+	<!-- Inputbox for date -->    
+	<aura:if isTrue="{!v.field.type == 'date'}">    
+	    <ui:inputDate label="{!v.field.label}" displayDatePicker="true" value="{!v.internalVal}" required="{! !v.field.nillable }" 
+	    	disabled="{! !v.EditMode}" change="{!c.valueChanged}" />
+	</aura:if>
+
+	<!-- Inputbox for number value -->    
+	<aura:if isTrue="{!v.field.type == 'int'}">
+		<lightning:input type="number" label="{!v.field.label}" value="{!v.internalVal}" required="{! !v.field.nillable }" 
+			disabled="{! !v.EditMode}" step="1" min="{!v.field.minValue ? v.field.minValue : '0'}" max="999999999" onchange="{!c.valueChanged}" />
+	</aura:if>
+
+	<!-- Inputbox for Lookup -->    
+	<aura:if isTrue="{!v.field.type == 'reference'}">
+		<c:Lookup field="{!v.field}" disabled="{! !v.EditMode}" value="{!v.internalVal}" class="field" />
+	</aura:if>
+
+</aura:component>

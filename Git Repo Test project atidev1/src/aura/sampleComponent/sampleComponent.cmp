@@ -1,0 +1,15 @@
+<aura:component implements ="force:lightningQuickAction">
+    <!--If you want to customise header then use 'implements ="force:lightningQuickActionWithoutHeader"' -->
+    <!--/**
+         * Webkul Software.
+         *
+         * @category  Webkul
+         * @author    Webkul
+         * @copyright Copyright (c) 2010-2016 Webkul Software Private Limited (https://webkul.com)
+         * @license   https://store.webkul.com/license.html
+         **/-->
+    <div>
+        Hello World!
+    </div>
+    
+</aura:component>
